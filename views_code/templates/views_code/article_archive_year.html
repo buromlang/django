@@ -1,0 +1,13 @@
+<ul>
+    {% for date in date_list %}
+    <li>{{ date|date }}</li>
+    {% endfor %}
+</ul>
+
+<div>
+        <h1> Articles for Year: {{ year|date:"Y" }}</h1>
+    {% for article in object_list %}
+    <h2>{{ article.headline }} - {{ article.pub_date|date:"F j, Y" }}</h2>
+    {% endfor %}
+</div>
+

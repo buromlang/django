@@ -1,0 +1,10 @@
+<h1> Manufacturer List</h1>
+<ul>
+    {% for manufacturer in object_list %}
+    <li>
+        {{ manufacturer.manufacturer_name }}
+    </li>
+    {% empty %}
+    <h1>No Manufacturer yet</h1>
+    {% endfor %}
+</ul>

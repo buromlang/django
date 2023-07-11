@@ -24,4 +24,5 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('relations/', include('relations.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
+    path("views_code/", include("views_code.urls")),
 ]

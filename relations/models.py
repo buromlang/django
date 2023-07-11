@@ -102,3 +102,7 @@ class Person(models.Model):
     def __str__(self):
         return f"{self.aadhar_id} ---> {self.person_name}"
 
+
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.PositiveSmallIntegerField()

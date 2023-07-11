@@ -1,0 +1,15 @@
+<h1>Articles</h1>
+<ul>
+    {% for article in object_list %}
+    <li>
+        <h2>{{ article.headline}} - {{ article.pub_date }}</h2>
+        <h4>{{ article.content }}</h4>
+    </li>
+    {% empty %}
+    <li>NO articles found</li>
+    {% endfor %}
+</ul>
+
+
+
+

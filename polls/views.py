@@ -5,6 +5,7 @@ from django.views import generic
 from django.utils import timezone
 from .models import Question, Choice
 
+
 class IndexView(generic.ListView):
     template_name = "polls/index.html"
     context_object_name = "question_list"
@@ -12,12 +13,14 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
 
+
 class DetailView(generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
 
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now())
+
 
 class ResultsView(generic.DetailView):
     model = Question
@@ -32,25 +35,14 @@ def vote(request, question_id):
         return render(request,
                       "polls/detail.html",
                       {
-                          "question":question,
-                          "error_message":"You didn't select a choice",
+                          "question": question,
+                          "error_message": "You didn't select a choice",
                       },
                       )
     else:
-        selected_choice.vote +=1
+        selected_choice.vote += 1
         selected_choice.save()
-        return HttpResponseRedirect(reverse("polls:results", args=(question.id, )))
-
-
-
-
-
-
-
-
-
-
-
+        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
 
 # def index(request):
 #     question_list = Question.objects.order_by('-pub_date')[:5]

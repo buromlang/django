@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from django.forms.renderers import TemplatesSetting
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # 'model_practice2.apps.ModelPractice2Config',
+    'views_code.apps.ViewsCodeConfig',
     'polls.apps.PollsConfig',
     'relations.apps.RelationsConfig',
     "debug_toolbar",
@@ -116,7 +119,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -132,3 +136,20 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# class CustomFormRenderer(TemplatesSetting):
+#     form_template_name = "form_template.html"
+#
+#
+# FORM_RENDERER = "mysite.settings.CustomFormRenderer"
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'myaccdummy25@gmail.com'
+EMAIL_HOST_PASSWORD = 'ghsrxbymgqdkhfsw'
+DEFAULT_FROM_EMAIL = 'myaccdummy25@gmail.com'
