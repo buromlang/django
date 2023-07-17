@@ -1,19 +1,19 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden, HttpResponseRedirect
 import datetime
 from views_code.models import Question
 from django.http import Http404
 from django.views.generic.base import TemplateView, RedirectView
 from views_code.models import Question, Article, Manufacturer
 from datetime import date
-from django.views.generic.detail import DetailView
+from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.list import ListView
 from django.utils import timezone
 from django.views.generic.edit import FormView
 from views_code.forms import ContactForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic.dates import YearArchiveView, MonthArchiveView, WeekArchiveView, DayArchiveView, \
     TodayArchiveView
 
@@ -70,7 +70,7 @@ class ArticleDetailView(DetailView):
 
 class ArticleListView(ListView):
     model = Article
-    paginate_by = 5
+    paginate_by = 3
 
     # def get_context_data(self, *args, **kwargs):
     #     context = super().get_context_data(*kwargs)
@@ -145,7 +145,6 @@ class ArticleMonthArchiveView(MonthArchiveView):
 
 class ArticleWeekArchiveView(WeekArchiveView):
     queryset = Article.objects.all()
-    print(queryset)
     date_field = "pub_date"
     week_format = "%W"
     allow_future = True
@@ -157,9 +156,38 @@ class ArticleDayArchiveView(DayArchiveView):
     allow_future = True
 
 
-# class ArticleTodayArchiveView(TodayArchiveView):
-#     queryset = Article.objects.all()
-#     date_field = 'pub_date'
-#     allow_future = True
+class ArticleTodayArchiveView(TodayArchiveView):
+    queryset = Article.objects.all()
+    date_field = 'pub_date'
+    allow_future = True
 
 
+# class RecordInterestView(SingleObjectMixin, View):
+#     model = Article
+#
+#     def get(self, request, *args, **kwargs):
+#         if not request.user.is_authenticated:
+#             return HttpResponseForbidden()
+#
+#         self.object = self.get_object()
+#
+#         return HttpResponseRedirect(
+#             reverse('article-detail', kwargs={'pk': self.object.pk})
+#         )
+
+
+# class RecordInterestView(SingleObjectMixin, ListView):
+#     paginate_by = 2
+#     template_name = "views_code/article_detail.html"
+#
+#     def get(self, request, *args, **kwargs):
+#         self.object = self.get_object(queryset=Article.objects.all())
+#         return super().get(request, *args, **kwargs)
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["publisher"] = self.object
+#         return context
+#
+#     def get_queryset(self):
+#         return self.object.book_set.all()

@@ -17,8 +17,8 @@ urlpatterns = [
     path("redirect_url/<int:pk>/", RedirectMethod.as_view(), name="redirect_url"),
     path("details/<int:pk>/", HomePageView.as_view(), name="question-detail"),
     path("go-to-django/", RedirectView.as_view(url="https://www.djangoproject.com/"), name="go-to-django"),
-    path("detail-view/<slug:slug>/", ArticleDetailView.as_view(), name="article-detail"),
-    # path("detail-view/<int:pk>/", ArticleDetailView.as_view(), name="article-detail"),
+    # path("detail-view/<slug:slug>/", ArticleDetailView.as_view(), name="article-detail"),
+    path("detail-view/<int:pk>/", ArticleDetailView.as_view(), name="article-detail"),
     path("list_view/", ArticleListView.as_view(), name='article_list'),
     path("form-view/", ContactFormView.as_view(), name="form-view"),
     path("create-view/", ManufacturerCreateView.as_view(), name="create_view"),
@@ -38,4 +38,5 @@ urlpatterns = [
     path("<int:year>/<str:month>/<int:day>/<int:pk>/", DateDetailView.as_view(model=Article, date_field='pub_date'),
          name="archive-date-detail"),
 
+    # path("article/<int:pk>/interest/", RecordInterestView.as_view(), name="article-interest"),
 ]

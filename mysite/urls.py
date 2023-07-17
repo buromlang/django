@@ -25,4 +25,8 @@ urlpatterns = [
     path('relations/', include('relations.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
     path("views_code/", include("views_code.urls")),
+    path("api_basic/", include("api_basic.urls")),
+    path("api-auth/", include("rest_framework.urls")),
+
 ]
+

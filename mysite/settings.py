@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     # 'model_practice2.apps.ModelPractice2Config',
     'views_code.apps.ViewsCodeConfig',
     'polls.apps.PollsConfig',
+    'api_basic.apps.ApiBasicConfig',
     'relations.apps.RelationsConfig',
     "debug_toolbar",
     'blog.apps.BlogConfig',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +86,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        "NAME": "django1",
+        "NAME": "django2",
         "USER": "buromlangshylla",
         "PASSWORD": "startmeup",
         "HOST": "127.0.0.1",
@@ -138,7 +140,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
 # class CustomFormRenderer(TemplatesSetting):
 #     form_template_name = "form_template.html"
 #
@@ -153,3 +154,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'myaccdummy25@gmail.com'
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'myaccdummy25@gmail.com'
+
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3,
+}
