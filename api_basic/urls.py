@@ -55,10 +55,18 @@ router = DefaultRouter()
 router.register(r'api_basic', views.SnippetViewSet, basename='snippet')
 router.register(r'users', views.UserViewSet, basename='user')
 
+router1 = DefaultRouter()
+router1.register(r'app-user', views.AppUserViewSet, basename='app-user')
+
 urlpatterns = [
     path('', include(router.urls)),
-    path('hello/', views.hello_world),
-    path('list-user/', views.ListUser.as_view()),
-    path('class-view/<int:pk>/', views.SnippetDetail.as_view())
+    path('app-user/', include(router1.urls)),
+    # path('hello/', views.UserSerializer.a),
+    path('user-list/', views.ListUser.as_view()),
+    path('app-user-list/', views.AppUserList.as_view()),
+    # path('app-user-custom-list/', views.AppUserCustomList),
+    # path('app-user-detail/<int:id>/', views.AppUserDetail.as_view()),
+    # path('app-user-login/<str:username>/<str:password>/', views.AppUserViewSet.as_view({'get': 'retrieve'})),
+    # path('class-view/<int:pk>/', views.SnippetDetail.as_view())
 ]
 

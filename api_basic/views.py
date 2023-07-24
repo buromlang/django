@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from .models import Snippet
-from .serializers import SnippetSerializer, UserSerializer
+from .models import Snippet, AppUser
+from .serializers import SnippetSerializer, UserSerializer,AppUserSerializer
 from rest_framework.decorators import api_view, APIView, action, throttle_classes, schema
 from rest_framework.response import Response
 from rest_framework import status
@@ -15,6 +15,10 @@ from rest_framework import renderers
 from rest_framework import viewsets
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.schemas import AutoSchema
+from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+
 
 # @csrf_exempt
 # def snippet_list(request):
@@ -108,30 +112,30 @@ from rest_framework.schemas import AutoSchema
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 #
 #
-class SnippetDetail(APIView):
-    def get_object(self, pk):
-        try:
-           return Snippet.objects.get(pk=pk)
-        except Snippet.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = SnippetSerializer(snippet)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = SnippetSerializer(snippet, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, pk, format=None):
-        snippet = self.get_object(pk)
-        snippet.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+# class SnippetDetail(APIView):
+#     def get_object(self, pk):
+#         try:
+#            return Snippet.objects.get(pk=pk)
+#         except Snippet.DoesNotExist:
+#             raise Http404
+#
+#     def get(self, request, pk, format=None):
+#         snippet = self.get_object(pk)
+#         serializer = SnippetSerializer(snippet)
+#         return Response(serializer.data)
+#
+#     def put(self, request, pk, format=None):
+#         snippet = self.get_object(pk)
+#         serializer = SnippetSerializer(snippet, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#     def delete(self, pk, format=None):
+#         snippet = self.get_object(pk)
+#         snippet.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # class SnippetList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
@@ -167,6 +171,7 @@ class SnippetDetail(APIView):
 #         serializer.save(owner=self.request.user)
 #
 #
+# #
 # class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
 #     queryset = Snippet.objects.all()
 #     serializer_class = SnippetSerializer
@@ -239,13 +244,75 @@ def hello_world(request):
 
 @throttle_classes([OncePerDayUserThrottle])
 class ListUser(APIView):
+    queryset = User.objects.all()
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    serializer_class = UserSerializer
 
     def get(self, request):
         users = [user.username for user in User.objects.all()]
         return Response(users)
 
 
+class AppUserList(generics.ListCreateAPIView):
+    queryset = AppUser.objects.all()
+    serializer_class = AppUserSerializer
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset().filter(username='burom1')
+        serializer = AppUserSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def perform_create(self, serializer):
+        queryset = AppUser.objects.filter(username=self.request.data['username'])
+        if queryset.exists():
+            raise ValidationError('You have already signed up')
+        serializer.save(username=self.request.data.username)
+
+
+class AppUserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = AppUser.objects.all()
+    serializer_class = AppUserSerializer
+    lookup_field = 'id'
+
+
+class AppUserViewSet(viewsets.ModelViewSet):
+    """ It checks AppUser Login credentials verification """
+    queryset = AppUser.objects.all()
+    lookup_field = 'username'
+    serializer_class = AppUserSerializer
+
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated]
+        else:
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
+
+    def retrieve(self, request, *args, **kwargs):
+        queryset = get_object_or_404(self.queryset, username=kwargs['username'])
+        if queryset.password == kwargs['password']:
+            return Response("logged in")
+        return Response("Failed")
+
+
+# need to check below code
+# class CustomFilterMixin:
+#     queryset = AppUser.objects.all()
+#
+#     def get_object(self):
+#         queryset = self.get_queryset().filter(username='burom')
+#         return queryset
+#
+#
+# class AppUserCustomList(generics.CreateAPIView, CustomFilterMixin):
+#     queryset = AppUser.objects.all()
+#     serializer_class = AppUserSerializer
+#
+#     def get(self, request, format=None):
+#         queryset = self.get_object()
+#         serializer = AppUserSerializer(queryset, many=True)
+#         return Response(serializer.data)
+
+# END
 

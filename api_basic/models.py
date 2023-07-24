@@ -36,3 +36,13 @@ class Snippet(models.Model):
         self.highlighted = highlight(code=self.code, lexer=lexer, formatter=formatter)
         super().save(*args, **kwargs)
 
+
+class AppUser(models.Model):
+    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.username
+
+    def set_password(self):
+        pass

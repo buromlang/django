@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # 'model_practice2.apps.ModelPractice2Config',
     'views_code.apps.ViewsCodeConfig',
+    'routes_practice.apps.RoutesPracticeConfig',
     'polls.apps.PollsConfig',
     'api_basic.apps.ApiBasicConfig',
     'relations.apps.RelationsConfig',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -158,5 +160,5 @@ DEFAULT_FROM_EMAIL = 'myaccdummy25@gmail.com'
 REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 3,
+    'PAGE_SIZE': 5,
 }
