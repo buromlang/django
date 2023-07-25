@@ -18,6 +18,7 @@ from rest_framework.schemas import AutoSchema
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination, CursorPagination
 
 
 # @csrf_exempt
@@ -211,10 +212,30 @@ def api_root(request, format=None):
 #         snippet = self.get_object()
 #         return Response(snippet.highlighted)
 
+class CustomPagination(PageNumberPagination):
+    page_size = 6
+    page_query_param = 'pag'
+    page_size_query_param = 'page_size_query'
+    max_page_size = 5
+    last_page_strings = 'last'
+
+
+class CustomLimitOffsetPagination(LimitOffsetPagination):
+    default_limit = 3
+    template = 'rest_framework/pagination/previous_and_next.html'
+    limit_query_param = 'limit_query'
+    offset_query_param = 'offset_query'
+    max_limit = 3
+
+
+class CustomCursorPagination(CursorPagination):
+    page_size = 3
+
 
 class SnippetViewSet(viewsets.ModelViewSet):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+    pagination_class = CustomCursorPagination
     permissions_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])

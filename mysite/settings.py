@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from django.forms.renderers import TemplatesSetting
+from rest_framework.pagination import PageNumberPagination
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -157,8 +158,10 @@ EMAIL_HOST_USER = 'myaccdummy25@gmail.com'
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'myaccdummy25@gmail.com'
 
+
 REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'],
+    # 'DEFAULT_PAGINATION_CLASS': 'apps.core.pagination.CustomPagination',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 5,
+    'PAGE_SIZE': 3,
 }
